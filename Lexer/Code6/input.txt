@@ -1,0 +1,13 @@
+#include <stdio.h>
+
+/* This is a multi-line comment containing float */
+float myValue = 5.5;  // This is a float variable
+
+// Another comment with float
+int floatVariable = 10; 
+
+int main() {
+    float x = 3.2;
+    printf("Sum: %f\n", x);
+    return 0;
+}

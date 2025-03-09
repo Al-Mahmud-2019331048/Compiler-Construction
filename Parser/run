@@ -1,0 +1,11 @@
+yacc -d parser.y
+
+lex lexer.l
+
+
+gcc lex.yy.c y.tab.c -o bool_parser
+
+
+gcc -o parser y.tab.c lex.yy.c -ll
+
+./parser

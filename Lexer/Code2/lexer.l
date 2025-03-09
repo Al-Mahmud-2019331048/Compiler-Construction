@@ -1,0 +1,77 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* Token Definitions */
+#define LT 1
+#define LE 2
+#define EQ 3
+#define NE 4
+#define GT 5
+#define GE 6
+#define IF 7
+#define THEN 8
+#define ELSE 9
+#define ID 10
+#define NUMBER 11
+#define RELOP 12
+
+/* Define yylval manually */
+union {
+    int num;
+    char *id;
+} yylval;
+
+/* Function Prototypes */
+int installID();
+int installNum();
+%}
+
+%%
+// Rules – Pattern { Action } pairs
+
+[ \t\n]+     {/* Ignore whitespace */}  
+
+if      { printf("Keyword: IF\n"); return IF; }
+then    { printf("Keyword: THEN\n"); return THEN; }
+else    { printf("Keyword: ELSE\n"); return ELSE; }
+
+[A-Za-z][A-Za-z0-9]*   { printf("Identifier: %s\n", yytext); return installID(); }
+
+[0-9]+(\.[0-9]+)?(E[+-]?[0-9]+)?  { printf("Number: %s\n", yytext); return installNum(); }
+
+"<"     { printf("Relational Operator: <\n"); yylval.num = LT; return RELOP; }
+"<="    { printf("Relational Operator: <=\n"); yylval.num = LE; return RELOP; }
+"="     { printf("Relational Operator: =\n"); yylval.num = EQ; return RELOP; }
+"<>"    { printf("Relational Operator: <>\n"); yylval.num = NE; return RELOP; }
+">"     { printf("Relational Operator: >\n"); yylval.num = GT; return RELOP; }
+">="    { printf("Relational Operator: >=\n"); yylval.num = GE; return RELOP; }
+
+.       { printf("Unknown character: %s\n", yytext); }
+
+%%
+
+/* Function to store identifiers */
+int installID() {
+    yylval.id = strdup(yytext);
+    return ID;
+}
+
+/* Function to store numbers */
+int installNum() {
+    yylval.num = atoi(yytext);
+    return NUMBER;
+}
+
+/* Main function */
+int main() {
+    while (yylex()) // Continue processing tokens until EOF
+        ;
+    return 0;
+}
+
+/* Function required by Lex to handle end-of-input */
+int yywrap() {
+    return 1;
+}
