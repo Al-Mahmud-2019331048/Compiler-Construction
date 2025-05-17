@@ -1,4 +1,4 @@
-##To run lexer and parser combinedly
+## To run lexer and parser combinedly
 
 yacc -d parser.y
 
